@@ -1,6 +1,16 @@
 MIT License
 
+Copyright (c) 2023 Luke Parke
 Copyright (c) 2026 Fletcher Bonds
+
+This project is a derivative work of archives-of-nethys-scraper by Luke Parke
+(https://github.com/LukasParke/archives-of-nethys-scraper), used and modified
+under the terms of the MIT License. The original copyright notice is retained
+above as that license requires.
+
+This license covers the source code in this repository only. It does not cover
+the Pathfinder Second Edition rules content the code retrieves at runtime, which
+remains the property of Paizo Inc. and its licensors. See the README for details.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

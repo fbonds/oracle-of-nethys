@@ -1,0 +1,13 @@
+node_modules/
+
+# Built locally by `pnpm scrape`. Never committed: it is a copy of Paizo's
+# rules text, and this project does not redistribute Paizo content.
+archives.db
+archives.db.building
+
+# Change digests from `pnpm watch`
+.oracle/
+
+.DS_Store
+*.log
+.env

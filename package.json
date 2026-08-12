@@ -1,0 +1,24 @@
+{
+  "name": "oracle-of-nethys",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A local, searchable copy of the Pathfinder 2e rules and a Claude Code oracle that answers questions from it",
+  "scripts": {
+    "scrape": "npx ts-node -T scraper.ts",
+    "mcp": "npx ts-node -T mcp.ts",
+    "watch": "npx ts-node -T watcher.ts"
+  },
+  "author": "Fletcher Bonds",
+  "license": "MIT",
+  "dependencies": {
+    "@elastic/elasticsearch": "^8.8.1",
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "sanitize-filename": "^1.6.3",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
