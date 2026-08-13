@@ -5,12 +5,12 @@ conversational oracle that answers questions from it — built for one person wh
 was tired of not knowing what to search for.
 
 ```
-> my rogue keeps getting hit by area spells, what are my options?
+> I'm rolling up a dwarf. What ancestry feats should I take?
 
-  ⌕ search_archives "reflex save area damage"
-  ▤ fetch_entries Confident Evasion, Cover
+  ⌕ search_archives "dwarf ancestry feat" (feat, Dwarf, ≤5)
+  ▤ fetch_entries Clan Lore, Rock Runner, Dwarven Doughtiness
 
-  A few options, cheapest first…
+  You pick one ancestry feat at level 1 and another at 5…
 ```
 
 ## What this is, and what it isn't
@@ -36,14 +36,26 @@ check it. Check it.
 ## The problem it solves
 
 Archives of Nethys is an excellent database and a hard place to be a beginner.
-It answers the question you typed, and a new player's difficulty is that they
-don't know which question to type. "My rogue keeps getting hit by fireballs"
-isn't a searchable term; *Reflex save*, *basic save*, *area effect*, *cover*,
-and the evasion line are, and knowing that vocabulary is most of the skill.
+It has a page for every feat, weapon, and spell in the game — and no page for
+any of the questions a new player actually has.
 
-So the oracle does the translation. You describe the situation; it works out
-which rules govern it, reads them, and explains them back with citations and the
-jargon defined.
+*What's the best melee weapon for a level 3 fighter? Which ancestry feats are
+worth taking as a dwarf? I'm playing a cleric, what do I do on my turn?*
+
+None of those have an entry. Answering them means reading a dozen entries and
+comparing them, which is the one thing a database can't do for you. It's also
+the thing that keeps you flipping between twelve browser tabs while everyone
+waits for you to take your turn.
+
+A second, quieter problem: the questions that *are* lookups often can't be
+looked up either, because you don't know the word yet. "I keep getting hit by
+fireballs" isn't a searchable term — *Reflex save*, *area effect*, and *cover*
+are. Knowing that vocabulary is most of the skill, and it's precisely what you
+don't have on day one.
+
+So the oracle does both jobs: it works out which rules govern your situation,
+reads them, and explains them back with the jargon defined and every claim
+citing the entry it came from.
 
 ## How it works
 

@@ -1,6 +1,6 @@
 ---
 name: pf2e-rules
-description: Answer Pathfinder Second Edition rules questions using the Archives of Nethys. Use whenever the user asks about a PF2e rule, spell, feat, condition, creature, item, class feature, or how something works at the table — including vague situational questions like "my rogue keeps getting hit by area spells" or "can I do X while Y". Requires the `nethys` MCP server.
+description: Answer Pathfinder Second Edition rules and character-building questions using the Archives of Nethys. Use whenever the user asks about a PF2e rule, spell, feat, condition, creature, item, or class feature; asks what to pick or what is good ("best melee weapon for a level 3 fighter", "which ancestry feats should I take as a dwarf", "what should I take at level 2"); or describes a situation at the table without naming the rule ("I keep getting hit by fireballs", "can I do X while Y"). Requires the `nethys` MCP server.
 ---
 
 # Pathfinder 2e rules
@@ -18,6 +18,14 @@ rule they need.
 Translate the situation into the game's vocabulary before searching. "I keep
 getting hit by fireballs" is a question about Reflex saves, area effects, cover,
 and the evasion line — search for those, not for the user's phrasing.
+
+"What's best" questions have no entry to look up. Answering them means gathering
+the candidates and comparing them: search the relevant category with the level
+and trait filters, fetch the handful that look strongest, and weigh them against
+each other. Say what you are optimizing for, since "best" depends on it — a
+weapon that suits a Strength build is a poor pick for a finesse one. Give a
+recommendation with a reason rather than an undifferentiated list, and mention
+when a choice is close enough that either option is fine.
 
 Search broadly first, then `fetch_entries` on the two or three that matter.
 Search results are summaries; fetch before quoting exact wording or numbers.
