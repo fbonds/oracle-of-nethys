@@ -6,7 +6,9 @@
   "scripts": {
     "scrape": "npx ts-node -T scraper.ts",
     "mcp": "npx ts-node -T mcp.ts",
-    "watch": "npx ts-node -T watcher.ts"
+    "watch": "npx ts-node -T watcher.ts",
+    "benchmark": "npx ts-node -T benchmark.ts",
+    "test": "node --require ts-node/register --test test/*.test.ts"
   },
   "author": "Fletcher Bonds",
   "license": "MIT",

@@ -89,8 +89,19 @@ export const SOURCE_FIELDS = [
   "legacy_id",
 ];
 
-export function openDb(readonly = true) {
-  return new DatabaseSync(DB_PATH, readonly ? { readOnly: true } : {});
+// One read handle for the process. The database is only ever replaced by a
+// separate `pnpm scrape` run, so there is nothing to invalidate mid-session,
+// and reopening per query cost more than the queries did.
+let handle: DatabaseSync | undefined;
+
+export function openDb() {
+  if (!handle) handle = new DatabaseSync(DB_PATH, { readOnly: true });
+  return handle;
+}
+
+export function closeDb() {
+  handle?.close();
+  handle = undefined;
 }
 
 export function dbExists() {
@@ -202,9 +213,7 @@ function resolveAliases(db: DatabaseSync) {
 export function readMeta() {
   if (!dbExists()) return null;
   try {
-    const db = openDb();
-    const rows = db.prepare("SELECT key, value FROM meta").all() as any[];
-    db.close();
+    const rows = openDb().prepare("SELECT key, value FROM meta").all() as any[];
     const meta = Object.fromEntries(rows.map((r) => [r.key, r.value]));
     const builtAt = meta.built_at ? new Date(meta.built_at) : null;
     const ageDays = builtAt ? (Date.now() - builtAt.getTime()) / 86400000 : Infinity;
@@ -230,7 +239,7 @@ const STOPWORDS = new Set([
 
 // FTS5 treats bare punctuation as syntax. Quoting each term makes any user
 // phrase safe to pass through — "off-guard" would otherwise be a parse error.
-function queryWords(query: string) {
+export function queryWords(query: string) {
   const words = query.split(/[^\p{L}\p{N}]+/u).filter((w) => w.length > 1);
   const meaningful = words.filter((w) => !STOPWORDS.has(w.toLowerCase()));
   return meaningful.length ? meaningful : words;
@@ -284,7 +293,7 @@ export function searchLocal(params: LocalSearchParams) {
                LIMIT ?`;
 
   const db = openDb();
-  try {
+  {
     const statement = db.prepare(sql);
     const run = (expression: string) =>
       statement.all(expression, ...args, limit) as any[];
@@ -318,23 +327,16 @@ export function searchLocal(params: LocalSearchParams) {
       url: row.url ?? undefined,
       superseded: row.superseded ? true : undefined,
     }));
-  } finally {
-    db.close();
   }
 }
 
 export function fetchLocal(ids: string[]) {
   if (!ids.length) return [];
   const capped = ids.slice(0, 10);
-  const db = openDb();
-  try {
-    return db
-      .prepare(
-        `SELECT id, name, category, source, url, markdown, superseded
-         FROM entries WHERE id IN (${capped.map(() => "?").join(",")})`
-      )
-      .all(...capped) as any[];
-  } finally {
-    db.close();
-  }
+  return openDb()
+    .prepare(
+      `SELECT id, name, category, source, url, markdown, superseded
+       FROM entries WHERE id IN (${capped.map(() => "?").join(",")})`
+    )
+    .all(...capped) as any[];
 }

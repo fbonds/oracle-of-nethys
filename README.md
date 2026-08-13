@@ -158,10 +158,15 @@ stays cheap; fetch returns full rules text before anything gets quoted.
 against your database, so you know when a book or errata has landed and it's
 worth re-scraping.
 
+Two more for working on it: `pnpm test` and `pnpm benchmark`.
+
 Queries hit the local database in under 10ms with no network call. The live
-archives are used only when `archives.db` is missing or older than 30 days, and
-the oracle is told which source answered so a stale result is never presented as
-current.
+archives are used only when `archives.db` is missing or older than 30 days —
+and that path is deliberately noisy and capped. It warns on stderr the first
+time it fires, and refuses after 25 requests with an instruction to re-scrape.
+Otherwise the person least likely to notice a stale database would be the one
+putting the most load on someone else's server, which is the opposite of the
+intent.
 
 ### Two details that make the answers correct
 
@@ -179,14 +184,33 @@ advice you half-remember from a 2021 forum thread still finds the current rule.
 
 ### On search quality
 
-The local index was measured against the live one rather than assumed to match
-it. On name lookups it's equal or better. On long natural-language questions
-it's still slightly behind — "how does dying and recovery work" surfaces
-*Recovery Checks* where the live index surfaces the *Dying* condition, because
-"recovery" is the rarer token and wins on term-frequency weighting. That gap was
-left in place deliberately: the oracle issues twenty or thirty searches on a hard
-question and refines as it goes, so single-shot ranking matters much less here
-than it would in a search box.
+Replacing a search engine that has had years of Pathfinder-specific tuning is
+the risky part of going local, so it was measured rather than asserted:
+
+```sh
+pnpm benchmark
+```
+
+That runs the same probe queries against both indexes and prints them side by
+side, with a note on each saying what a correct answer looks like. Currently
+3 of 6 probes agree on the top hit — but read the lists rather than the number,
+because some disagreements are local being *tighter*: "Evasion" returns three
+precise matches where live returns those three plus two weak ones.
+
+The real gap is long natural-language questions. "How does dying and recovery
+work" surfaces *Recovery Checks* where live surfaces the *Dying* condition,
+because "recovery" is the rarer token and wins on term-frequency weighting. That
+one is marked KNOWN GAP in the harness so it isn't mistaken for a regression. It
+was left in place deliberately: the oracle issues twenty or thirty searches on a
+hard question and refines as it goes, so single-shot ranking matters much less
+here than it would in a search box.
+
+`pnpm test` covers the three functions that degrade quietly rather than throwing
+— query tokenisation, the alias reconstruction, and the AND/OR fallback.
+
+[NOTES.md](NOTES.md) has the development history: the scraper bugs this started
+from, the two architectures thrown away, and the ranking experiments that
+failed — including one that looked obviously right and made things worse.
 
 ## Setup
 

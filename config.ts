@@ -17,4 +17,10 @@ export const config = {
   // oracle falls back to querying the archives directly. `pnpm watch` reports
   // whether anything actually changed.
   maxAgeDays: 30,
+
+  // Ceiling on live requests per session while running on the fallback. A hard
+  // question fires twenty or thirty searches, so an unnoticed stale database
+  // would otherwise turn the least attentive user into the heaviest load on a
+  // volunteer-run service. Past this, the tools refuse and say to re-scrape.
+  liveCallBudget: 25,
 };

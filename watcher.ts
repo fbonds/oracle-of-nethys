@@ -24,9 +24,8 @@ const digest16 = (text: string) =>
  *  against what the oracle is actually answering from — not a side manifest
  *  that could drift from it. */
 function localHashes() {
-  const db = openDb();
-  try {
-    const rows = db
+  {
+    const rows = openDb()
       .prepare("SELECT id, name, category, url, markdown FROM entries")
       .all() as any[];
     return new Map<string, Hashed>(
@@ -40,8 +39,6 @@ function localHashes() {
         },
       ])
     );
-  } finally {
-    db.close();
   }
 }
 

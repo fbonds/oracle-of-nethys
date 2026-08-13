@@ -27,6 +27,18 @@ const HIT_FIELDS = [
 // creature from crowding out the rest of the conversation.
 const MAX_ENTRY_CHARS = 12000;
 
+// Cutting at an arbitrary character can end mid-row of a stat block table,
+// leaving the model a fragment that reads like complete data. Back up to the
+// last line break so the truncation lands somewhere legible, and say plainly
+// that the rest was cut.
+function clip(text: string, url?: string) {
+  if (text.length <= MAX_ENTRY_CHARS) return text;
+  const cut = text.slice(0, MAX_ENTRY_CHARS);
+  const boundary = cut.lastIndexOf("\n");
+  const kept = boundary > MAX_ENTRY_CHARS * 0.5 ? cut.slice(0, boundary) : cut;
+  return `${kept}\n\n[Entry truncated here — read the rest at ${url ?? "Archives of Nethys"}]`;
+}
+
 export interface SearchParams {
   query: string;
   category?: string[];
@@ -110,10 +122,7 @@ async function fetchLive(ids: string[]) {
       source: entry.primary_source,
       url: link(entry.url),
       superseded: entry.remaster_id?.length ? entry.remaster_id : undefined,
-      text:
-        text.length > MAX_ENTRY_CHARS
-          ? `${text.slice(0, MAX_ENTRY_CHARS)}\n\n[…truncated; see ${link(entry.url)}]`
-          : text,
+      text: clip(text, link(entry.url)),
     };
   });
 }
@@ -151,24 +160,66 @@ export async function* streamAllEntries(fields: string[]) {
 // a database that is missing or old enough that its rules may have been errata'd.
 // `reason` is surfaced to the model so an answer drawn from a stale snapshot is
 // never presented as current.
+//
+// Meta cannot change within a process — the database is built by a separate
+// `pnpm scrape` run — so resolve it once rather than on every tool call.
+let cachedSource: { local: boolean; reason: string } | undefined;
+
 export function retrievalSource() {
+  if (cachedSource) return cachedSource;
   const meta = readMeta();
-  if (!meta) return { local: false, reason: "no local database — run `pnpm scrape`" };
-  if (meta.stale) {
-    return {
+  if (!meta) {
+    cachedSource = { local: false, reason: "no local database — run `pnpm scrape`" };
+  } else if (meta.stale) {
+    cachedSource = {
       local: false,
       reason: `local database is ${Math.floor(meta.ageDays)} days old — using live archives`,
     };
+  } else {
+    cachedSource = { local: true, reason: `local database, built ${meta.builtAt?.slice(0, 10)}` };
   }
-  return { local: true, reason: `local database, built ${meta.builtAt?.slice(0, 10)}` };
+  return cachedSource;
+}
+
+// Running on the fallback means every query leaves the machine. That is fine
+// occasionally and rude at volume, so it is budgeted and noisy rather than
+// silent — otherwise the user least likely to notice a stale database is the
+// one putting the most load on someone else's server.
+let liveCalls = 0;
+
+class StaleDatabaseError extends Error {}
+
+function chargeLiveCall() {
+  const { reason } = retrievalSource();
+  liveCalls++;
+  if (liveCalls === 1) {
+    process.stderr.write(
+      `[nethys] ${reason}. Querying Archives of Nethys directly; ` +
+        `run \`pnpm scrape\` to work from a local copy again.\n`
+    );
+  }
+  if (liveCalls > config.liveCallBudget) {
+    throw new StaleDatabaseError(
+      `Stopped after ${config.liveCallBudget} live requests to Archives of Nethys. ` +
+        `The local database is missing or out of date (${reason}), and answering ` +
+        `from the live site at this volume is not a polite use of a volunteer-run ` +
+        `service. Tell the user to run \`pnpm scrape\` — it takes about three ` +
+        `minutes — then ask again.`
+    );
+  }
 }
 
 export async function searchArchives(params: SearchParams) {
-  return retrievalSource().local ? searchLocal(params) : searchLive(params);
+  if (retrievalSource().local) return searchLocal(params);
+  chargeLiveCall();
+  return searchLive(params);
 }
 
 export async function fetchEntries(ids: string[]) {
-  if (!retrievalSource().local) return fetchLive(ids);
+  if (!retrievalSource().local) {
+    chargeLiveCall();
+    return fetchLive(ids);
+  }
   return fetchLocal(ids).map((entry: any) => {
     const text: string = entry.markdown ?? "";
     return {
@@ -178,10 +229,7 @@ export async function fetchEntries(ids: string[]) {
       source: entry.source ?? undefined,
       url: link(entry.url),
       superseded: entry.superseded ? true : undefined,
-      text:
-        text.length > MAX_ENTRY_CHARS
-          ? `${text.slice(0, MAX_ENTRY_CHARS)}\n\n[…truncated; see ${link(entry.url)}]`
-          : text,
+      text: clip(text, link(entry.url)),
     };
   });
 }
