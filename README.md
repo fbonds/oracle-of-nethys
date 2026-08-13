@@ -5,13 +5,26 @@ conversational oracle that answers questions from it — built for one person wh
 was tired of not knowing what to search for.
 
 ```
-> I'm rolling up a dwarf. What ancestry feats should I take?
+> As a level 3 fighter is Knight's Retaliation the best class feat to choose?
 
-  ⌕ search_archives "dwarf ancestry feat" (feat, Dwarf, ≤5)
-  ▤ fetch_entries Clan Lore, Rock Runner, Dwarven Doughtiness
+  Called nethys 8 times
 
-  You pick one ancestry feat at level 1 and another at 5…
+  No, and it isn't available to you. Two problems:
+
+  It's a level 8 feat, gated behind Knights of Lastwall access — your GM
+  has to hand it to you. Even at 8 it's narrow: a reaction that only fires
+  when an undead creature critically fails a Strike against you.
+
+  You don't get a class feat at 3. Fighter feats come at 1st and every
+  even level. Level 3 gives you Bravery, a general feat, and a skill
+  increase. So there are really two questions under yours…
 ```
+
+Three things happened there that a database cannot do: it refused the premise,
+found a second reason to refuse it, and then noticed the question underneath the
+question. It went on to warn off a trap feat and to point out that a general feat
+the player might reasonably pick is made redundant by a class feature they gain
+at that exact level.
 
 ## What this is, and what it isn't
 
@@ -48,14 +61,75 @@ the thing that keeps you flipping between twelve browser tabs while everyone
 waits for you to take your turn.
 
 A second, quieter problem: the questions that *are* lookups often can't be
-looked up either, because you don't know the word yet. "I keep getting hit by
-fireballs" isn't a searchable term — *Reflex save*, *area effect*, and *cover*
-are. Knowing that vocabulary is most of the skill, and it's precisely what you
-don't have on day one.
+looked up either, because you don't know the word yet. Knowing the vocabulary is
+most of the skill, and it's precisely what you don't have on day one.
 
 So the oracle does both jobs: it works out which rules govern your situation,
 reads them, and explains them back with the jargon defined and every claim
 citing the entry it came from.
+
+## Three lenses, one eye
+
+The Graeae of Greek myth were three sisters who shared a single eye, passing it
+between them and pooling what each one saw. That's the design here, and the
+constraint is the point: one source of truth, three ways of reading it, one
+answer out.
+
+The oracle works every question through three readings. They aren't
+personalities and they never appear by name — they are three distinct ways of
+being wrong, arranged to cancel each other out.
+
+**The Archivist** reads what is actually written. Does this option exist, at this
+level, with these prerequisites, at the action cost claimed? Every number comes
+from a fetched entry, never from memory. It holds a veto — nothing is
+recommended that can't be confirmed from the text — and it is explicitly barred
+from having opinions about whether an option is any good.
+
+**The Tactician** asks what actually works, given what's legal. Three actions per
+turn is the game's central constraint, so an option that saves an action usually
+beats one that adds a small bonus. It reasons about how pieces combine —
+prerequisites, the multiple attack penalty, whether something is dead weight
+until a later level — and it commits to a pick rather than presenting a menu.
+
+**The Improviser** asks whether this is even the right question. Someone asking
+for a better weapon may actually need to stop standing in the open; someone
+asking which feat to take at 2 may be building a character they won't enjoy
+playing.
+
+A lookup gets the Archivist alone — "what does off-guard do" needs one accurate
+paragraph, not a committee. Decisions get all three.
+
+### Why you never see them
+
+The deliberation is internal, and the output is a single voice. A lens surfaces
+only when the three disagreed *and* it changes what you should do — an Archivist
+veto on the obvious pick is worth showing; unanimous agreement is not. Answers
+that read like committee minutes would be a failure of the design, not a
+demonstration of it.
+
+The honest limit: this is structured self-critique, not independent review. One
+model wearing three hats catches real errors, but shares its own blind spots.
+What actually guards against invention is that the Archivist's veto is tied to
+fetched entries rather than to careful thinking.
+
+### What it caught
+
+The exchange at the top of this page is a real one. Checking each claim against
+the database afterwards, across eight tool calls, nothing was invented:
+
+- **Knight's Retaliation is Feat 8**, uncommon, and carries an explicit *"Knights
+  of Lastwall have access to this feat"* line — so it's blocked twice over.
+- **Fighters get no class feat at level 3**, which reframes the question entirely.
+- **Vicious Swing** — the feat formerly called Power Attack — *"counts as two
+  attacks when calculating your multiple attack penalty."* It reads like a
+  damage boost and is roughly a wash. Every fact needed to know that is on the
+  page; the conclusion is on no page at all.
+- **Canny Acumen for Will saves is redundant at exactly level 3**, because
+  Bravery — the fighter class feature gained at 3 — already raises Will to
+  expert. That required connecting two entries and the character's level.
+
+That last one is the whole argument for the project in a single line. No page
+anywhere says "don't take Canny Acumen at 3."
 
 ## How it works
 
