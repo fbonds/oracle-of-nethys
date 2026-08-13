@@ -35,11 +35,22 @@ not a service, and not something I'm distributing or making money from. I'm
 sharing the repository because the engineering was interesting, not because
 anyone should depend on it.
 
-**It contains no Pathfinder content.** What's committed here is code. The rules
-database is built on your own machine by fetching from Archives of Nethys, and
-it is deliberately excluded from version control. If you run it, the resulting
-`archives.db` is a local copy of Paizo's material for your personal reference —
-treat it that way, and don't redistribute it. See
+**It contains no Pathfinder content — it fetches it for you, once.** What's
+committed here is code. The first thing you run, `pnpm scrape`, pulls the rules
+from Archives of Nethys and builds `archives.db` on your own machine. That takes
+about three minutes and happens one time.
+
+Every question after that reads the local database. A hard question can fire
+twenty or thirty searches, and running those against your own disk takes
+milliseconds instead of seconds — but the bigger reason is courtesy. Archives of
+Nethys is a volunteer-run service, and hammering it a few dozen times to answer
+one question about a fighter feat would be a poor way to treat it. `pnpm watch`
+then checks in periodically, compares the archives against your copy, and tells
+you when a new book or errata makes a re-scrape worthwhile.
+
+The database that produces is a personal reference copy of Paizo's material, and
+it's excluded from version control by design. Treat it that way — don't publish
+it, don't redistribute it, don't build a service on it. See
 [Rights and attribution](#rights-and-attribution) below.
 
 **It will be wrong sometimes.** Retrieval reduces invention; it doesn't
@@ -194,9 +205,10 @@ rules question in any Claude Code session.
 > The `--silent` matters. Without it pnpm prints its script banner to stdout,
 > which corrupts the JSON-RPC stream the MCP transport runs over.
 
-The skill file is what makes it teach rather than just retrieve: cite
-everything, define jargon on first use, distinguish written rules from table
-convention, and say "the rules don't cover this" instead of inventing a ruling.
+The skill file is what makes it advise rather than retrieve — it carries the
+[three lenses](#three-lenses-one-eye), the citation discipline, and the
+instruction to say "the rules don't cover this" instead of inventing a ruling.
+Without it you have a search tool with extra steps.
 
 ## Keeping it current
 
