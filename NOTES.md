@@ -20,10 +20,15 @@ dependabot bump, an MIT license PR from a stranger, and no other development.
 Three things were wrong with it, none obvious from reading it:
 
 **It silently dropped 11% of every scrape.** Entries were written to
-`sorted/<category>/<name>.json`, and entry names are not unique — 1,392 of
-1,957 actions are called "Strike". Each collision overwrote the last. 18,990
-entries became 16,886 files, with no error and no warning. Keying on the entry
-id fixed it.
+`sorted/<category>/<name>.json`, and entry names are nowhere near unique. The
+action category alone holds 4,132 entries under 1,002 distinct names: `Cast a
+Spell` appears 416 times, `Interact` 336 times, and bare trait annotations like
+`(concentrate)` 485 times. Each collision overwrote the last, silently — 18,990
+entries became 16,886 files with no error and no warning.
+
+Across the full database the same scheme would lose 15,216 of 45,340 entries,
+a third of everything, and the only symptom is a directory that looks fine.
+Keying on the entry id fixed it.
 
 **It was one release from silent truncation.** A single query with `size: 10000`
 sits exactly on Elasticsearch's default result window. Equipment was at 9,061
