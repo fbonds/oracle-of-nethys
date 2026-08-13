@@ -26,7 +26,21 @@ question. It went on to warn off a trap feat and to point out that a general fea
 the player might reasonably pick is made redundant by a class feature they gain
 at that exact level.
 
+**About the name.** *Oracle* is a Pathfinder class — a spellcaster who draws
+power from a mystery they don't fully control. *Nethys* is the god of magic.
+[Archives of Nethys](https://2e.aonprd.com/) is the community rules database this
+reads from. So the name scans as an in-world title while describing the software
+literally, which is the sort of joke you make at 1am. If you don't play
+Pathfinder: it's a rules assistant, and none of that matters.
+
 ## What this is, and what it isn't
+
+**It runs inside Claude Code.** This is an MCP server and a skill, not a
+standalone app — there's no web UI and no chat window of its own. If you use
+[Claude Code](https://claude.com/claude-code), setup is three commands. If you
+don't, the database and search layer are plain TypeScript with one dependency
+and would point at something else without much trouble, but you'd be writing
+that part. Worth knowing before you clone.
 
 **This is a thought experiment.** It started as a question — *what would it take
 to build a rules assistant that doesn't make things up?* — and turned into a
@@ -192,10 +206,13 @@ pnpm benchmark
 ```
 
 That runs the same probe queries against both indexes and prints them side by
-side, with a note on each saying what a correct answer looks like. Currently
-3 of 6 probes agree on the top hit — but read the lists rather than the number,
-because some disagreements are local being *tighter*: "Evasion" returns three
-precise matches where live returns those three plus two weak ones.
+side, with a note on each saying what a correct answer looks like.
+
+Read the lists, not the score. A top-hit match count is the wrong measure here,
+because some disagreements are local being *tighter* than live rather than
+worse: "Evasion" returns three precise matches where live returns those three
+plus two weak ones, and that counts as a disagreement. With that said, 3 of 6
+probes currently agree on the top hit.
 
 The real gap is long natural-language questions. "How does dying and recovery
 work" surfaces *Recovery Checks* where live surfaces the *Dying* condition,
@@ -205,8 +222,11 @@ was left in place deliberately: the oracle issues twenty or thirty searches on a
 hard question and refines as it goes, so single-shot ranking matters much less
 here than it would in a search box.
 
-`pnpm test` covers the three functions that degrade quietly rather than throwing
-— query tokenisation, the alias reconstruction, and the AND/OR fallback.
+`pnpm test` covers three functions — query tokenisation, the alias
+reconstruction, and the AND/OR fallback. Those are the ones that degrade quietly
+instead of throwing, so they're where a silent regression would hide. It is not
+a test suite for the project; the scraper, the MCP layer, and the watcher have
+no automated coverage at all.
 
 [NOTES.md](NOTES.md) has the development history: the scraper bugs this started
 from, the two architectures thrown away, and the ranking experiments that
@@ -226,8 +246,20 @@ cp -r skills/pf2e-rules ~/.claude/skills/
 Verify with `claude mcp list` — `nethys` should report **Connected**. Then ask a
 rules question in any Claude Code session.
 
-> The `--silent` matters. Without it pnpm prints its script banner to stdout,
-> which corrupts the JSON-RPC stream the MCP transport runs over.
+### The one gotcha
+
+`--silent` is load-bearing, and leaving it out fails in a way that gives you
+nothing to search for.
+
+An MCP server over stdio speaks JSON-RPC on stdout — that stream *is* the
+protocol. pnpm prints its script banner (`> oracle-of-nethys@1.0.0 mcp`) to
+stdout before your process starts, so the first thing the client tries to parse
+is not JSON, and the connection dies before the server has done anything wrong.
+The server is fine. The banner is the bug.
+
+Anything a wrapper prints to stdout will do this. Diagnostics belong on stderr,
+which is why `mcp.ts` logs there and why Claude Code can still show you those
+lines without breaking anything.
 
 The skill file is what makes it advise rather than retrieve — it carries the
 [three lenses](#three-lenses-one-eye), the citation discipline, and the
