@@ -175,6 +175,11 @@ GitHub URLs so they work on the site, where those files are excluded.
 of fletcherbonds.com. When framed, links to other hosts get `target="_blank"`, as in
 project-kit. Ruled out: `_top`, because it replaces the embedding page.
 
+**2026-11-17: README rewritten to the writing rules, with two deliberate exceptions.** The
+em dash at line 14 stays, because it is inside a quoted real exchange and changing it would
+misquote it. The Graeae comparison stays, because it is the idea behind "Three lenses, one
+eye". The Paizo Community Use notice in "Rights and attribution" is kept word for word.
+
 ## In flight
 
 What is being worked on now, and what state it is in. Remove an item when it is finished,
@@ -195,22 +200,33 @@ design exists yet.
 
 As of 2026-11-17, when this was written.
 
-**Uncommitted.** Nothing, after the commit that added the website on 2026-11-17.
+**Uncommitted.** Nothing, after the commit that rewrote the README on 2026-11-17.
 
 **Unpushed.** Answer with `git rev-list --left-right --count origin/main...main`. Snapshot,
-not to be trusted: on 2026-11-17 one commit was unpushed, the Sass build fix.
-After the push, check the live site: `/` shows the styled page, and `/NOTES.html`,
-`/NEXT.html`, `/CLAUDE.md` and `/db.ts` return 404. Not yet checked.
+not to be trusted: on 2026-11-17 one commit was unpushed, the README rewrite.
 
 **Unreleased or undeployed.** A push to `main` is the release, so unreleased equals
-unpushed. Last release: `f0e0e66` "Correct the collision statistic", 2026-08-13, which was
-`origin/main` on 2026-11-17 by `git fetch` and the count above.
+unpushed. Last release: `ed66465`, the Sass build fix, pushed 2026-11-17. Checked that day:
+the Pages workflow run for `ed66465` completed with success (`gh run list`); `/` returned
+200 and served `style.css?v=ed66465` with the GitHub link bar; `/README.html`,
+`/NOTES.html`, `/NEXT.html`, `/CLAUDE.html`, `/HOWTOSAVESTATE.html`, `/CLAUDE.md`,
+`/NEXT.md`, `/db.ts`, `/mcp.ts`, `/LICENSE`, `/package.json`, `/skills/pf2e-rules/SKILL.md`
+and `/test/db.test.ts` returned 404. Not checked: the page inside the fletcherbonds.com
+frame, Safari, Firefox, a real phone. After the README push, re-check that the workflow run
+succeeded and `/` shows the new text.
 
 ## Open, not blocking
 
 - `archives.db` is from 2026-08-12, 97 days old on 2026-11-17. The README says the server
   falls back to the live archives past 30 days. A re-scrape (`pnpm scrape`) would clear it.
-  Not checked in code whether the fallback is firing.
-- The writing rules ban em dashes. Existing files predate them and still use them (counted
-  2026-11-17): README.md 35, NOTES.md 16, SKILL.md 10, and comments in five .ts files.
-  Not to be fixed unprompted.
+  The code matches: `config.ts` sets `maxAgeDays: 30` and `liveCallBudget: 25`, and
+  `aon.ts` switches to live when the database is stale (read 2026-11-17). Not observed
+  firing in a session.
+- The writing rules ban em dashes. README.md was rewritten to the writing rules on
+  2026-11-17. Files that still use em dashes (occurrences, counted 2026-11-17):
+  NOTES.md 16, skills/pf2e-rules/SKILL.md 11, and 29 across five .ts files. Not to be
+  fixed unprompted.
+- The README's "Each claim was checked against the database afterwards, across eight
+  tool calls" is ambiguous. Whether the eight calls were the oracle's own ("Called nethys
+  8 times" in the transcript) or a separate check is unknown. Commit bade879 does not say,
+  and no transcript from 2026-08-13 survives on this machine.
