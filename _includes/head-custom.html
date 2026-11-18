@@ -1,0 +1,22 @@
+<!-- Replaces the Primer theme's head-custom.html, whose favicon line is commented out. -->
+<link rel="icon" type="image/svg+xml" href="{{ '/assets/images/favicon.svg' | relative_url }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@600;700&family=Montserrat:wght@500;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap">
+<!-- When the page is shown inside another site's frame (the projects section of
+     fletcherbonds.com), links to other sites open in a new tab. _blank over _top because
+     _top replaces the embedding page, so a reader sent off to GitHub would lose their place.
+     Many sites also refuse to load inside a frame, so without this those links would show
+     an error. Taken from project-kit, which solved the same problem. -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (window.top !== window.self) {
+      document.querySelectorAll('a[href]').forEach(function (a) {
+        if (a.host && a.host !== location.host && !a.target) {
+          a.target = '_blank';
+          a.rel = 'noopener';
+        }
+      });
+    }
+  });
+</script>

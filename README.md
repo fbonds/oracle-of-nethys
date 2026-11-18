@@ -228,7 +228,7 @@ instead of throwing, so they're where a silent regression would hide. It is not
 a test suite for the project; the scraper, the MCP layer, and the watcher have
 no automated coverage at all.
 
-[NOTES.md](NOTES.md) has the development history: the scraper bugs this started
+[NOTES.md](https://github.com/fbonds/oracle-of-nethys/blob/main/NOTES.md) has the development history: the scraper bugs this started
 from, the two architectures thrown away, and the ranking experiments that
 failed — including one that looked obviously right and made things worse.
 
@@ -289,7 +289,7 @@ Elasticsearch endpoint comes from. His scraper worked out the hard part — how 
 get at the data at all — and its unfinished `uploader.ts` pointed clearly at
 where it was headed: get the archives into something you can actually query.
 This is one answer to that. The original is MIT licensed and his copyright is
-retained in [LICENSE](LICENSE).
+retained in [LICENSE](https://github.com/fbonds/oracle-of-nethys/blob/main/LICENSE).
 
 Archives of Nethys is a labour of love that has served the Pathfinder community
 for years. This project would be impossible without it. If you use this, be a
@@ -324,6 +324,6 @@ To be explicit about what that means here:
 
 ## License
 
-Source code is [MIT licensed](LICENSE), retaining Luke Parke's copyright from
+Source code is [MIT licensed](https://github.com/fbonds/oracle-of-nethys/blob/main/LICENSE), retaining Luke Parke's copyright from
 the original work. The license covers this code only — not the Pathfinder rules
 content it retrieves.

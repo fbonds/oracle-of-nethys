@@ -1,0 +1,23 @@
+title: Oracle of Nethys
+description: A local, searchable copy of the Pathfinder 2e rules, and an MCP server that lets Claude Code answer rules questions from it with citations.
+theme: jekyll-theme-primer
+# The site is README.md alone. Jekyll builds or copies every file it is not told to
+# skip, so a new top-level file is published unless it is added here.
+exclude:
+  - CLAUDE.md
+  - NEXT.md
+  - HOWTOSAVESTATE.md
+  - NOTES.md
+  - LICENSE
+  - aon.ts
+  - benchmark.ts
+  - config.ts
+  - db.ts
+  - mcp.ts
+  - scraper.ts
+  - watcher.ts
+  - package.json
+  - pnpm-lock.yaml
+  - tsconfig.json
+  - skills
+  - test

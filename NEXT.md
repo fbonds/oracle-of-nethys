@@ -121,6 +121,13 @@ test through the `nethys` tools tests uncommitted local code, not `origin/main`.
 `cp -r`. It matched `skills/pf2e-rules` under `diff -r` on 2026-11-17. After any edit to the
 repo's skill, it goes stale silently until copied again.
 
+**GitHub Pages publishes every file it is not told to skip.** Pages builds `main` with
+Jekyll: every `.md` becomes a page and every other file is copied as is. Before
+`_config.yml` existed, `/NOTES.html` returned 200 (checked 2026-11-17). The `exclude` list
+in `_config.yml` names each file by hand, so a new top-level file is published unless it is
+added there. Wildcards were not used because it was not confirmed that Jekyll 3.10 accepts
+them in `exclude`.
+
 ## Decided, do not redo
 
 What was settled and why, what was ruled out and why, and anything the owner said not to
@@ -141,6 +148,22 @@ Lighter option if release points are wanted later: git tags.
 deny rules and the SessionStart hook unnecessary for this project. The rules against pushing
 and broad staging rest on `CLAUDE.md` alone.
 
+**2026-11-17: The website is `README.md` alone, styled as parchment and ember.** Pages
+deploys from `main`, root, with the Primer theme. `_config.yml` excludes everything else.
+`_layouts/default.html` is Primer v0.6.0's layout with its title line replaced by a "Get it
+on GitHub" bar. The style is light only: parchment surfaces, crimson structure, gold for
+decoration and hover and never for text, espresso text. Fonts are Cinzel Decorative (hero),
+Cinzel (subheads), Montserrat (labels), Lora (body). Ruled out: a separate landing page,
+because it would be a second copy of the README's claims; MedievalSharp and Uncial Antiqua,
+because they are hard to read beyond a few words; and anything resembling Paizo's trade
+dress (a Pathfinder-style logotype, an edition badge, Paizo art), because the README says
+the project is not endorsed by Paizo. README links to `NOTES.md` and `LICENSE` are absolute
+GitHub URLs so they work on the site, where those files are excluded.
+
+**2026-11-17: Framed links open in a new tab.** The page is embedded in the projects section
+of fletcherbonds.com. When framed, links to other hosts get `target="_blank"`, as in
+project-kit. Ruled out: `_top`, because it replaces the embedding page.
+
 ## In flight
 
 What is being worked on now, and what state it is in. Remove an item when it is finished,
@@ -153,15 +176,20 @@ section it belongs in.
 
 What is agreed but waiting, with a pointer to wherever the full proposal is written out.
 
+**Optional "ember" dark variant of the website.** Fletcher chose light only for now on
+2026-11-17 and asked to keep a dark variant as an option if the project goes that way. No
+design exists yet.
+
 ## Committed, pushed, released: three separate questions
 
 As of 2026-11-17, when this was written.
 
-**Uncommitted.** Nothing, after the commit that added the kit files on 2026-11-17.
+**Uncommitted.** Nothing, after the commit that added the website on 2026-11-17.
 
 **Unpushed.** Answer with `git rev-list --left-right --count origin/main...main`. Snapshot,
-not to be trusted: the commit that added the kit files on 2026-11-17 is unpushed until
-Fletcher pushes.
+not to be trusted: on 2026-11-17 two commits were unpushed, the kit files and the website.
+After the push, check the live site: `/` shows the styled page, and `/NOTES.html`,
+`/NEXT.html`, `/CLAUDE.md` and `/db.ts` return 404. Not yet checked.
 
 **Unreleased or undeployed.** A push to `main` is the release, so unreleased equals
 unpushed. Last release: `f0e0e66` "Correct the collision statistic", 2026-08-13, which was
