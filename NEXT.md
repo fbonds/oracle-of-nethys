@@ -16,7 +16,7 @@
 > are in `HOWTOSAVESTATE.md`. Stored memories load before any file and go stale the same
 > way: check them against the repo rather than trusting them.
 
-Updated 2026-11-17. Working state for Oracle of Nethys. `README.md` is the public
+Updated 2026-11-18. Working state for Oracle of Nethys. `README.md` is the public
 documentation, `NOTES.md` is the development history, and there is no separate design or
 roadmap document. This file is neither of those.
 
@@ -180,6 +180,13 @@ em dash at line 14 stays, because it is inside a quoted real exchange and changi
 misquote it. The Graeae comparison stays, because it is the idea behind "Three lenses, one
 eye". The Paizo Community Use notice in "Rights and attribution" is kept word for word.
 
+**2026-11-18: Inside a frame, the page background is near-black.** On fletcherbonds.com,
+Project-Kit and Vibe Coding How-To show that site's #050508 around their content, and only
+the content carries their own style. Fletcher asked for the same here. A script in
+`_includes/head-custom.html` adds `html.framed` when `window.top !== window.self`, and
+`assets/css/style.scss` sets `html.framed` and its `body` to #050508 with no texture. Opened
+directly, the page keeps the tan background.
+
 ## In flight
 
 What is being worked on now, and what state it is in. Remove an item when it is finished,
@@ -198,16 +205,25 @@ design exists yet.
 
 ## Committed, pushed, released: three separate questions
 
-As of 2026-11-17, when this was written.
+As of 2026-11-18, when this was written.
 
-**Uncommitted.** Nothing, after the save-state commit on 2026-11-17.
+**Uncommitted.** Nothing, after the save-state commit on 2026-11-18.
 
 **Unpushed.** Answer with `git rev-list --left-right --count origin/main...main`. Snapshot,
-not to be trusted: on 2026-11-17 one commit was unpushed, this save-state commit. Before it,
-`0952608` was `origin/main` and the count was `0 0` after `git fetch`.
+not to be trusted: on 2026-11-18 one commit was unpushed, this save-state commit. Before it,
+`git ls-remote` showed `d69ba43` as `main` and the count was `0 0`.
 
 **Unreleased or undeployed.** A push to `main` is the release, so unreleased equals
-unpushed. Last release: `0952608`, the README rewrite, pushed 2026-11-17. Checked that day:
+unpushed. Last release: `d69ba43`, the framed background, pushed 2026-11-18. Checked that
+day: the Pages workflow run for `d69ba43` completed with success (`gh run list`); `/` served
+`style.css?v=d69ba43...` and the `framed` script; the live CSS contained
+`html.framed,html.framed body{background-color:#050508;background-image:none}`. A headless
+Chrome screenshot of the live page inside a black stand-in parent showed black around the
+parchment, and one of the page opened directly showed tan. Fletcher checked the real embed
+on fletcherbonds.com and reported that it matches Project-Kit. Not checked: Safari, Firefox,
+a real phone.
+
+The release before it: `0952608`, the README rewrite, pushed 2026-11-17. Checked that day:
 the Pages workflow run for `0952608` completed with success (`gh run list`); `/` served
 `style.css?v=0952608` and the rewritten text, with one em dash in the body (the quoted
 transcript). For the build before it (`ed66465`), `/` returned 200 with the GitHub link bar
@@ -215,8 +231,7 @@ and a headless Chrome screenshot matched the approved preview, and `/README.html
 `/NOTES.html`, `/NEXT.html`, `/CLAUDE.html`, `/HOWTOSAVESTATE.html`, `/CLAUDE.md`,
 `/NEXT.md`, `/db.ts`, `/mcp.ts`, `/LICENSE`, `/package.json`, `/skills/pf2e-rules/SKILL.md`
 and `/test/db.test.ts` returned 404; for `0952608`, `/NOTES.html`, `/NEXT.html`,
-`/CLAUDE.md` and `/db.ts` were re-checked and returned 404. Not checked: the page inside the
-fletcherbonds.com frame, Safari, Firefox, a real phone.
+`/CLAUDE.md` and `/db.ts` were re-checked and returned 404.
 
 **Tests.** `pnpm test` on 2026-11-17: 14 tests in 4 suites, 14 pass, 0 skipped. The three
 suites marked `needsDb` skip when `archives.db` is missing, so a run on a fresh clone
