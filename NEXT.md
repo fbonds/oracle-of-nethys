@@ -128,6 +128,17 @@ in `_config.yml` names each file by hand, so a new top-level file is published u
 added there. Wildcards were not used because it was not confirmed that Jekyll 3.10 accepts
 them in `exclude`.
 
+**A browser preview does not prove the site builds.** Pages compiles `assets/css/style.scss`
+with Ruby Sass 3.7.4 (jekyll-sass-converter 1.5.2, github-pages v232, read from the build
+log on 2026-11-17). A stylesheet previewed straight in a browser passed, then failed that
+build: Sass 3.7.4 cannot parse a data URI as a custom property value. A failed build leaves
+the previous deploy live, so the site looks unchanged rather than broken. Before pushing a
+stylesheet change, compile it with that version:
+`gem install sass -v 3.7.4 --install-dir <dir>`, then run `<dir>/bin/sass --scss` on the file
+with its front matter and `@import` line removed. After pushing, read the workflow run
+(`gh run list`), not `pages/builds/latest`, whose status stayed "building" after the run had
+failed.
+
 ## Decided, do not redo
 
 What was settled and why, what was ruled out and why, and anything the owner said not to
@@ -187,7 +198,7 @@ As of 2026-11-17, when this was written.
 **Uncommitted.** Nothing, after the commit that added the website on 2026-11-17.
 
 **Unpushed.** Answer with `git rev-list --left-right --count origin/main...main`. Snapshot,
-not to be trusted: on 2026-11-17 two commits were unpushed, the kit files and the website.
+not to be trusted: on 2026-11-17 one commit was unpushed, the Sass build fix.
 After the push, check the live site: `/` shows the styled page, and `/NOTES.html`,
 `/NEXT.html`, `/CLAUDE.md` and `/db.ts` return 404. Not yet checked.
 
