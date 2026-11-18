@@ -200,20 +200,31 @@ design exists yet.
 
 As of 2026-11-17, when this was written.
 
-**Uncommitted.** Nothing, after the commit that rewrote the README on 2026-11-17.
+**Uncommitted.** Nothing, after the save-state commit on 2026-11-17.
 
 **Unpushed.** Answer with `git rev-list --left-right --count origin/main...main`. Snapshot,
-not to be trusted: on 2026-11-17 one commit was unpushed, the README rewrite.
+not to be trusted: on 2026-11-17 one commit was unpushed, this save-state commit. Before it,
+`0952608` was `origin/main` and the count was `0 0` after `git fetch`.
 
 **Unreleased or undeployed.** A push to `main` is the release, so unreleased equals
-unpushed. Last release: `ed66465`, the Sass build fix, pushed 2026-11-17. Checked that day:
-the Pages workflow run for `ed66465` completed with success (`gh run list`); `/` returned
-200 and served `style.css?v=ed66465` with the GitHub link bar; `/README.html`,
+unpushed. Last release: `0952608`, the README rewrite, pushed 2026-11-17. Checked that day:
+the Pages workflow run for `0952608` completed with success (`gh run list`); `/` served
+`style.css?v=0952608` and the rewritten text, with one em dash in the body (the quoted
+transcript). For the build before it (`ed66465`), `/` returned 200 with the GitHub link bar
+and a headless Chrome screenshot matched the approved preview, and `/README.html`,
 `/NOTES.html`, `/NEXT.html`, `/CLAUDE.html`, `/HOWTOSAVESTATE.html`, `/CLAUDE.md`,
 `/NEXT.md`, `/db.ts`, `/mcp.ts`, `/LICENSE`, `/package.json`, `/skills/pf2e-rules/SKILL.md`
-and `/test/db.test.ts` returned 404. Not checked: the page inside the fletcherbonds.com
-frame, Safari, Firefox, a real phone. After the README push, re-check that the workflow run
-succeeded and `/` shows the new text.
+and `/test/db.test.ts` returned 404; for `0952608`, `/NOTES.html`, `/NEXT.html`,
+`/CLAUDE.md` and `/db.ts` were re-checked and returned 404. Not checked: the page inside the
+fletcherbonds.com frame, Safari, Firefox, a real phone.
+
+**Tests.** `pnpm test` on 2026-11-17: 14 tests in 4 suites, 14 pass, 0 skipped. The three
+suites marked `needsDb` skip when `archives.db` is missing, so a run on a fresh clone
+without a scrape passes with fewer tests; check the skipped count.
+
+**Local setup, checked 2026-11-17.** `claude mcp get nethys`: Connected, running from this
+working copy. `~/.claude/skills/pf2e-rules` identical to `skills/pf2e-rules` under
+`diff -r`.
 
 ## Open, not blocking
 
