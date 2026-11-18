@@ -303,3 +303,12 @@ body {
     letter-spacing: 0.08em;
   }
 }
+
+// Inside another site's frame (the projects section of fletcherbonds.com) the page around
+// the parchment leaf takes that site's near-black, #050508, the background project-kit and
+// vibe-coding-howto use. Only the leaf carries this page's style there.
+html.framed,
+html.framed body {
+  background-color: #050508;
+  background-image: none;
+}
